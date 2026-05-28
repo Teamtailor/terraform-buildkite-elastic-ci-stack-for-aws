@@ -17,7 +17,7 @@ resource "aws_lambda_function" "scaler" {
   role = local.use_custom_scaler_lambda_role ? var.scaler_lambda_role_arn : aws_iam_role.scaler_lambda_role[0].arn
 
   environment {
-    variables = {
+    variables = merge({
       # Required parameters
       BUILDKITE_AGENT_TOKEN_SSM_KEY = local.use_custom_token_path ? var.buildkite_agent_token_parameter_store_path : aws_ssm_parameter.buildkite_agent_token_parameter[0].name
       BUILDKITE_QUEUE               = var.buildkite_queue
@@ -44,7 +44,7 @@ resource "aws_lambda_function" "scaler" {
 
       # CloudWatch metrics (optional)
       CLOUDWATCH_METRICS = var.scaler_enable_cloudwatch_metrics ? "true" : "false"
-    }
+    }, var.scaler_extra_env_vars)
   }
 
   # Ensure the log group exists before the function
