@@ -54,6 +54,11 @@ output "scaler_lambda_function_arn" {
   value       = local.has_variable_size ? aws_lambda_function.scaler[0].arn : null
 }
 
+output "scaler_lambda_role_arn" {
+  description = "ARN of the IAM role attached to the scaler Lambda. Use this to grant the Lambda access to external resources (e.g. agent-token secrets in another module)."
+  value       = local.has_variable_size && !local.use_custom_scaler_lambda_role ? aws_iam_role.scaler_lambda_role[0].arn : (local.has_variable_size ? var.scaler_lambda_role_arn : null)
+}
+
 output "scaler_log_group" {
   description = "CloudWatch Log Group for the scaler Lambda"
   value       = local.has_variable_size ? aws_cloudwatch_log_group.scaler_lambda_logs[0].name : null

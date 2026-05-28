@@ -1124,6 +1124,28 @@ variable "tags" {
 }
 
 # =============================================================================
+# SCALER LAMBDA OVERRIDES (Teamtailor fork)
+# =============================================================================
+
+variable "agent_scaler_s3_bucket_override" {
+  description = "Override the S3 bucket the scaler Lambda is loaded from. Use this to point at a self-built buildkite-agent-scaler binary instead of Buildkite's published artifacts. Empty string keeps the upstream default."
+  type        = string
+  default     = ""
+}
+
+variable "buildkite_agent_scaler_version_override" {
+  description = "Override the scaler Lambda version (the v<VERSION> segment of the S3 key). Pair with agent_scaler_s3_bucket_override to load a custom-built binary. Empty string keeps the upstream default."
+  type        = string
+  default     = ""
+}
+
+variable "scaler_extra_env_vars" {
+  description = "Additional environment variables to set on the scaler Lambda. Merged into (and overriding) the default environment block. Use this to pass flags supported only by a forked scaler (e.g. SCHEDULED_JOBS_ONLY)."
+  type        = map(string)
+  default     = {}
+}
+
+# =============================================================================
 # CROSS-VARIABLE VALIDATIONS
 # =============================================================================
 
